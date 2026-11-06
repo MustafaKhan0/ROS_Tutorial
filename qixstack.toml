@@ -56,5 +56,5 @@ dependencies = [
 ]
 
 [tool.colcon.dependencies]
-stinger-software = { server = "github.com", namespace = "gt-marine-robotics-group", name = "stinger-software", version = "main" }
+stinger-software = { server = "github.com", namespace = "MustafaKhan0", name = "stinger-software", version = "main" }
 sllidar_ros2 = { server = "github.com", namespace = "Slamtec", name = "sllidar_ros2", version = "main" }

@@ -13,4 +13,11 @@ class TutorialTopic_3_2:
 
         ### STUDENT CODE HERE
 
+        self.red_buoy_location.position.x = 2.0
+        self.red_buoy_location.position.y = 3.0
+        self.yellow_buoy_location.position.x = -3.0
+        self.yellow_buoy_location.position.y = 1.0
+
+        self.red_buoy_angle = np.arctan2(3,2)
+        self.yellow_buoy_angle = np.arctan2(1,-3)
         ### END STUDENT CODE

@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from tutorial_msgs.srv import GetBuoyLocation
+from std_msgs.msg import String, Float32
 
 class TutorialTopic_1_4_Client(Node):
     def __init__(self):
@@ -19,6 +20,8 @@ class TutorialTopic_1_4_Client(Node):
         request = GetBuoyLocation.Request()
         # TODO: Q1.4.d 
         ### STUDENT CODE HERE
+        request.buoy_name = String()
+        request.buoy_name.data = 'yellow_buoy'
 
         ### END STUDENT CODE
         # Send request to service

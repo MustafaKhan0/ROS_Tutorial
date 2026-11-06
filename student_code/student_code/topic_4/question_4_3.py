@@ -95,7 +95,8 @@ class TutorialTopic_4_3(Node):
             return
 
         if self.prev_time is None:
-            self.prev_time = self.get_clock().now()
+            self.prev_time =  rclpy.time.Time.from_msg(msg.header.stamp)
+            # self.prev_time = self.get_clock().now()
             return
 
         msg_base_link = self.transfrom_imu(msg)
@@ -107,13 +108,54 @@ class TutorialTopic_4_3(Node):
         # TODO: 4.3.a Odom Frame IMU
         ### STUDENT CODE HERE
 
+        q = msg_base_link.orientation
+        q_tf = [q.x, q.y, q.z, q.w]
+        rot_matrix = tf_transformations.quaternion_matrix(q_tf)[:3, :3]
+
+
+        ang_vel = self.rotate_vector(rot_matrix, msg_base_link.angular_velocity)
+        lin_acc = self.rotate_vector(rot_matrix, msg_base_link.linear_acceleration)
+        
+
         ### END STUDENT CODE
 
+        
 
         odom_msg = Odometry()
         odom_msg.header.stamp = msg.header.stamp
+        
         # TODO: 4.3.b IMU Dead Reckoning
         ### STUDENT CODE HERE
+
+        odom_msg.header.frame_id = 'odom'
+        odom_msg.child_frame_id = 'base_link'
+
+        now =  rclpy.time.Time.from_msg(msg.header.stamp)
+        # now = self.get_clock().now()
+        dt = (now.nanoseconds - self.prev_time.nanoseconds) / 1e9
+        self.prev_time = now
+
+        self.velocity += lin_acc[:2] * dt
+        self.position += self.velocity * dt
+
+        odom_msg.pose.pose.position.x = self.position[0]
+        odom_msg.pose.pose.position.y = self.position[1]
+        odom_msg.pose.pose.position.z = 0.0
+
+        odom_msg.pose.pose.orientation = msg_base_link.orientation
+
+        vel_body = rot_matrix.T @ np.array([self.velocity[0], self.velocity[1], 0.0])
+
+        odom_msg.twist.twist.linear.x = vel_body[0]
+        odom_msg.twist.twist.linear.y = vel_body[1]
+        odom_msg.twist.twist.linear.z = 0.0
+
+        odom_msg.twist.twist.angular.x = ang_vel[0]
+        odom_msg.twist.twist.angular.y = ang_vel[1]
+        odom_msg.twist.twist.angular.z = ang_vel[2]
+
+        self.odom_pub.publish(odom_msg)
+
 
         ### END STUDENT CODE
 

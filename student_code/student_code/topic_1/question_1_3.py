@@ -7,6 +7,12 @@ class TutorialTopic_1_3(Node):
     def __init__(self):
         super().__init__('tutorial_node_q_1_3')
         ### STUDENT CODE HERE
+        self.topic_publisher = self.create_publisher(
+            msg_type = Int32,
+            topic = '/tutorial/counter25',
+            qos_profile=10
+        )
+        self.counter = 0
 
         ### END STUDENT CODE
         
@@ -16,7 +22,11 @@ class TutorialTopic_1_3(Node):
 
     def timer_callback(self):
         ### STUDENT CODE HERE
-
+        if self.counter < 26:
+            value = Int32()
+            value.data = self.counter
+            self.counter += 1
+            self.topic_publisher.publish(value)
         ### END STUDENT CODE
         pass
 

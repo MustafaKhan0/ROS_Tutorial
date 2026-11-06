@@ -10,13 +10,19 @@ class TutorialTopic_1_2(Node):
         ## TODO: Q1.2.a Creating a subscriber to a topic
         self.basic_topic_subscription = self.create_subscription(
             ### STUDENT CODE HERE
-
+            msg_type = String,
+            topic = '/tutorial/basic_topic',
+            callback = self.topic_callback,
+            qos_profile = 10,
             ### END STUDENT CODE
         )
         
         # TODO: Q1.2.b Creating Publisher
         self.new_topic_publisher = self.create_publisher(
             ### STUDENT CODE HERE
+            msg_type=String,
+            topic='/tutorial/new_topic',
+            qos_profile=10
 
             ### END STUDENT CODE
         )
@@ -25,7 +31,7 @@ class TutorialTopic_1_2(Node):
 
     def topic_callback(self, msg: String):
         ## TODO: Q1.2.c Message Data
-        self.topic_string_message = None
+        self.topic_string_message = msg.data
         ### STUDENT CODE HERE
 
         ### END STUDENT CODE
@@ -33,7 +39,8 @@ class TutorialTopic_1_2(Node):
         # TODO: Q1.2.d Publishing Data  
         new_message = String()
         ### STUDENT CODE HERE
-
+        new_message.data = self.topic_string_message + " ROS"
+        self.new_topic_publisher.publish(new_message)
         ### END STUDENT CODE
     
 def main(args=None):
